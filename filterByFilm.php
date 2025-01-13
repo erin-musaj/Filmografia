@@ -20,26 +20,28 @@
     </form>
 
     <?php
-    require "connection.php";
-    $nome = $_POST["nome"];
-    $result = $connection->prepare("SELECT attori.* FROM attori INNER JOIN recitare ON attori.id_attore=recitare.id_attore INNER JOIN film ON recitare.id_film=film.id_film WHERE film.nome=:nome;");
-    $result->execute(array(":nome" => $nome));
-    echo "<table>";
-    $numColumns = $result->columnCount();
-    for ($col = 0; $col < $numColumns; $col++) {
-        $columnMeta = $result->getColumnMeta($col);
-        echo "<th>" . $columnMeta['name'] . "</th>";
-    }
-    echo "</tr>";
-
-    while ($row = $result->fetch(mode: PDO::FETCH_ASSOC)) {
-        echo "<tr>";
-        foreach ($row as $value) {
-            echo "<td>" . $value . "</td>";
+    if(isset($_POST["nome"])){
+        require "connection.php";
+        $nome = $_POST["nome"];
+        $result = $connection->prepare("SELECT attori.* FROM attori INNER JOIN recitare ON attori.id_attore=recitare.id_attore INNER JOIN film ON recitare.id_film=film.id_film WHERE film.nome=:nome;");
+        $result->execute(array(":nome" => $nome));
+        echo "<table>";
+        $numColumns = $result->columnCount();
+        for ($col = 0; $col < $numColumns; $col++) {
+            $columnMeta = $result->getColumnMeta($col);
+            echo "<th>" . $columnMeta['name'] . "</th>";
         }
         echo "</tr>";
+
+        while ($row = $result->fetch(mode: PDO::FETCH_ASSOC)) {
+            echo "<tr>";
+            foreach ($row as $value) {
+                echo "<td>" . $value . "</td>";
+            }
+            echo "</tr>";
+        }
+        echo "</table><br><br>";
     }
-    echo "</table><br><br>";
     ?>
 </body>
 
